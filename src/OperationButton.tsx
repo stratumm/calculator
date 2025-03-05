@@ -1,18 +1,20 @@
 import { ACTIONS } from "./App"
 
 type OperationButtonType = {
-    digit: String
-    dispatch: React.Dispatch<{
-        type: String
+    operation: string
+    dispatch: React.Dispatch<
+    {
+        type: string
         payload: {
-            digit: String;
+            operation: string
         }
-    }>
+    }
+    >
 }
 
-export default function OperationButton({dispatch, digit}: OperationButtonType) {
+export default function OperationButton({dispatch, operation}: OperationButtonType) {
     return (
-        <button onClick= {() => dispatch({type: ACTIONS.OPERATE, payload: { digit }})}> 
+        <button onClick= {() => dispatch({type: ACTIONS.OPERATE, payload: { operation }})}>
         </button>
     )
 }

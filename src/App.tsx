@@ -1,19 +1,51 @@
 import { useReducer } from "react"
+import DigitButton from "./DigitButton"
+import OperationButton from "./OperationButton"
+import "./styles.css"
 
 export const ACTIONS = {
   ADD: "add-digit",
-  OPERATE: "operatte",
+  OPERATE: "operate",
   CLEAR: "clear",
   DELETE: "delete",
   EVALUATE: "evaluate"
 }
 
+type StateType = {
+  previousOperand?: string
+  currentOperand?: string
+  operation?: string
+}
+
+type ActionType = {
+    type: string
+    payload: {
+      digit?: string
+      operation?: string
+    }
+}
+
+function reducer(state: StateType, {type, payload}: ActionType) {
+
+    switch(type) {
+      case ACTIONS.ADD:
+        if (payload.digit === "0" && state.currentOperand){
+          return state
+        }
+      }
+      return state
+
+    }
+
+
+
 export default function App() {
 
-  const [{previousOperand, currentOperand, operation}, dispatch] = useReducer(useReducer, {})
+  // the dispatch from OperationButton or Digitbutton sends it to the reducer here
+  // it then checks for the type and the required operations needed to perform on it
+  const [{previousOperand, currentOperand, operation}, dispatch] = useReducer(reducer, {}) 
 
   return (
-
     <div className="calculator-grid">
       <div className="output">
         <div className="previousOperand">
@@ -30,7 +62,6 @@ export default function App() {
       <DigitButton digit="2" dispatch={dispatch}/>
       <DigitButton digit="3" dispatch={dispatch}/>
       <OperationButton operation="÷" dispatch={dispatch}/>
-
       <DigitButton digit="4" dispatch={dispatch}/>
       <DigitButton digit="5" dispatch={dispatch}/>
       <DigitButton digit="6" dispatch={dispatch}/>
