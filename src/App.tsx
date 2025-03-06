@@ -19,7 +19,7 @@ type StateType = {
 
 type ActionType = {
     type: string
-    payload: {
+    payload?: {
       digit?: string
       operation?: string
     }
@@ -29,13 +29,19 @@ function reducer(state: StateType, {type, payload}: ActionType) {
 
     switch(type) {
       case ACTIONS.ADD:
-        if (payload.digit === "0" && state.currentOperand){
+        if (state.currentOperand === undefined && payload?.digit === "0"){
           return state
         }
-      }
-      return state
-
+        return {
+          ...state,
+          currentOperand: `${state.currentOperand || ""}${payload?.digit}`
+        }
+      case ACTIONS.CLEAR:
+        return {}
+      default:
+        return state
     }
+  }
 
 
 
@@ -55,7 +61,7 @@ export default function App() {
           </div>
         </div>
       </div>
-      <button className="span-two">AC</button>
+      <button className="span-two" onClick={() => dispatch({type: ACTIONS.CLEAR})}>AC</button>
       <button className="span-two">DEL</button>
       <OperationButton operation="÷" dispatch={dispatch}/>
       <DigitButton digit="1" dispatch={dispatch}/>
