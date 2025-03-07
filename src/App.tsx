@@ -12,10 +12,11 @@ export const ACTIONS = {
 }
 
 type StateType = {
-  previousOperand?: string
-  currentOperand?: string
+  previousOperand?: string,
+  currentOperand?: string,
   operation?: string
 }
+
 
 type ActionType = {
     type: string
@@ -37,13 +38,53 @@ function reducer(state: StateType, {type, payload}: ActionType) {
           currentOperand: `${state.currentOperand || ""}${payload?.digit}`
         }
       case ACTIONS.OPERATE:
-        if (state.currentOperand === undefined && payload?.digit === "0"){
-          return {}
+        
+        if (state.previousOperand && state.operation){
+          return {
+            ...state,
+            previousOperand: parseInt(state.previousOperand) * parseInt(state.currentOperand || "0"),
+            currentOperand: undefined
+          }
         }
+        if (state.currentOperand && "÷")
+      return {
+        ...state,
+        operation: state.operation,
+        previousOperand: `${state.currentOperand}${payload?.operation}`,
+        currentOperand: undefined
+
+      }
+      if (state.currentOperand && "*")
+        return {
+          ...state,
+          operation: state.operation,
+          previousOperand: `${state.currentOperand}${payload?.operation}`,
+          currentOperand: undefined
+        }
+      if (state.currentOperand && "+")
+        return {
+          ...state,
+          operation: state.operation,
+          previousOperand: `${state.currentOperand}${payload?.operation}`,
+          currentOperand: undefined
+        }
+        if (state.currentOperand && "-")
+          return {
+            ...state,
+            operation: state.operation,
+            previousOperand: `${state.currentOperand}${payload?.operation}`,
+            currentOperand: undefined
+          }
+
+      return state
 
       case ACTIONS.CLEAR:
         return {}
       case ACTIONS.DELETE:
+        return {
+          ...state,
+          currentOperand: state.currentOperand?.slice(0,-1)
+        }
       case ACTIONS.EVALUATE:
         default:
           return state
