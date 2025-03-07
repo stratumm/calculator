@@ -36,10 +36,17 @@ function reducer(state: StateType, {type, payload}: ActionType) {
           ...state,
           currentOperand: `${state.currentOperand || ""}${payload?.digit}`
         }
+      case ACTIONS.OPERATE:
+        if (state.currentOperand === undefined && payload?.digit === "0"){
+          return {}
+        }
+
       case ACTIONS.CLEAR:
         return {}
-      default:
-        return state
+      case ACTIONS.DELETE:
+      case ACTIONS.EVALUATE:
+        default:
+          return state
     }
   }
 
@@ -54,27 +61,41 @@ export default function App() {
   return (
     <div className="calculator-grid">
       <div className="output">
-        <div className="previousOperand">
+        <div className="previous-operand">
           {previousOperand} {operation}
-          <div className="currentOperand">
-            {currentOperand}
-          </div>
         </div>
+        <div className="current-operand">{currentOperand}</div>
       </div>
-      <button className="span-two" onClick={() => dispatch({type: ACTIONS.CLEAR})}>AC</button>
-      <button className="span-two">DEL</button>
-      <OperationButton operation="÷" dispatch={dispatch}/>
-      <DigitButton digit="1" dispatch={dispatch}/>
-      <DigitButton digit="2" dispatch={dispatch}/>
-      <DigitButton digit="3" dispatch={dispatch}/>
-      <OperationButton operation="÷" dispatch={dispatch}/>
-      <DigitButton digit="4" dispatch={dispatch}/>
-      <DigitButton digit="5" dispatch={dispatch}/>
-      <DigitButton digit="6" dispatch={dispatch}/>
-      <DigitButton digit="7" dispatch={dispatch}/>
-      <DigitButton digit="8" dispatch={dispatch}/>
-      <DigitButton digit="9" dispatch={dispatch}/>
-      <DigitButton digit="0" dispatch={dispatch}/>
+      <button
+        className="span-two"
+        onClick={() => dispatch({ type: ACTIONS.CLEAR })}
+      >
+        AC
+      </button>
+      <button onClick={() => dispatch({ type: ACTIONS.DELETE })}>
+        DEL
+      </button>
+      <OperationButton operation="÷" dispatch={dispatch} />
+      <DigitButton digit="1" dispatch={dispatch} />
+      <DigitButton digit="2" dispatch={dispatch} />
+      <DigitButton digit="3" dispatch={dispatch} />
+      <OperationButton operation="*" dispatch={dispatch} />
+      <DigitButton digit="4" dispatch={dispatch} />
+      <DigitButton digit="5" dispatch={dispatch} />
+      <DigitButton digit="6" dispatch={dispatch} />
+      <OperationButton operation="+" dispatch={dispatch} />
+      <DigitButton digit="7" dispatch={dispatch} />
+      <DigitButton digit="8" dispatch={dispatch} />
+      <DigitButton digit="9" dispatch={dispatch} />
+      <OperationButton operation="-" dispatch={dispatch} />
+      <DigitButton digit="." dispatch={dispatch} />
+      <DigitButton digit="0" dispatch={dispatch} />
+      <button
+        className="span-two"
+        onClick={() => dispatch({ type: ACTIONS.EVALUATE })}
+      >
+        =
+      </button>
     </div>
   )
 }
