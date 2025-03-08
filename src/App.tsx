@@ -17,7 +17,6 @@ type StateType = {
   operation?: string
 }
 
-
 type ActionType = {
     type: string
     payload?: {
@@ -27,7 +26,6 @@ type ActionType = {
 }
 
 function reducer(state: StateType, {type, payload}: ActionType) {
-
     switch(type) {
       case ACTIONS.ADD:
         if (state.currentOperand === undefined && payload?.digit === "0"){
@@ -38,65 +36,48 @@ function reducer(state: StateType, {type, payload}: ActionType) {
           currentOperand: `${state.currentOperand || ""}${payload?.digit}`
         }
       case ACTIONS.OPERATE:
-        
-        if (state.previousOperand && state.operation){
+
+        if (state.previousOperand && state.operation && state.currentOperand) {
           return {
             ...state,
-            previousOperand: parseInt(state.previousOperand) * parseInt(state.currentOperand || "0"),
+            previousOperand: (eval(`${state.previousOperand} ${state.operation} ${state.currentOperand}`)).toString(),
+            currentOperand: undefined,
+            operation: payload?.operation
+          }
+        }
+        if (state.currentOperand) {
+          return {
+            ...state,
+            operation: payload?.operation,
+            previousOperand: state.currentOperand,
             currentOperand: undefined
           }
         }
-        if (state.currentOperand && "÷")
-      return {
-        ...state,
-        operation: state.operation,
-        previousOperand: `${state.currentOperand}${payload?.operation}`,
-        currentOperand: undefined
-
-      }
-      if (state.currentOperand && "*")
-        return {
-          ...state,
-          operation: state.operation,
-          previousOperand: `${state.currentOperand}${payload?.operation}`,
-          currentOperand: undefined
-        }
-      if (state.currentOperand && "+")
-        return {
-          ...state,
-          operation: state.operation,
-          previousOperand: `${state.currentOperand}${payload?.operation}`,
-          currentOperand: undefined
-        }
-        if (state.currentOperand && "-")
-          return {
-            ...state,
-            operation: state.operation,
-            previousOperand: `${state.currentOperand}${payload?.operation}`,
-            currentOperand: undefined
-          }
-
-      return state
+        return state
 
       case ACTIONS.CLEAR:
         return {}
       case ACTIONS.DELETE:
         return {
           ...state,
-          currentOperand: state.currentOperand?.slice(0,-1)
+          currentOperand: state.currentOperand?.slice(0, -1)
         }
       case ACTIONS.EVALUATE:
-        default:
-          return state
+        if (state.previousOperand && state.currentOperand && state.operation) {
+          return {
+            ...state,
+            currentOperand: (eval(`${state.previousOperand} ${state.operation} ${state.currentOperand}`)).toString(),
+            previousOperand: undefined,
+            operation: undefined
+          }
+        }
+        return state
+      default:
+        return state
     }
-  }
-
-
+}
 
 export default function App() {
-
-  // the dispatch from OperationButton or Digitbutton sends it to the reducer here
-  // it then checks for the type and the required operations needed to perform on it
   const [{previousOperand, currentOperand, operation}, dispatch] = useReducer(reducer, {}) 
 
   return (
