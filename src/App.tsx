@@ -36,7 +36,6 @@ function reducer(state: StateType, {type, payload}: ActionType) {
           currentOperand: `${state.currentOperand || ""}${payload?.digit}`
         }
       case ACTIONS.OPERATE:
-
         if (state.previousOperand && state.operation && state.currentOperand) {
           return {
             ...state,
@@ -54,7 +53,6 @@ function reducer(state: StateType, {type, payload}: ActionType) {
           }
         }
         return state
-
       case ACTIONS.CLEAR:
         return {}
       case ACTIONS.DELETE:
